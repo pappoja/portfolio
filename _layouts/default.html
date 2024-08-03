@@ -20,20 +20,29 @@
    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
    <![endif]-->
    <style>
-      .main-container {
+       body, html {
+         margin: 0;
+         padding: 0;
+         width: 100%;
+         height: 100%;
+       }
+       .wrapper {
          display: flex;
-      }
-      .banner {
-         flex: 1;
-         max-width: 400px; /* Adjust this width as needed. Default: 200 */
+         flex-direction: row;
+         width: 100%;
+         height: 100%;
+       }
+       header {
+         flex: 0 0 200px; /* Fixed width for the header */
          padding: 20px;
          background-color: #f4f4f4; /* Optional: Add a background color for better visibility */
-      }
-      .content {
-         flex: 3;
+       }
+       section {
+         flex: 1; /* Take up the remaining space */
          padding: 20px;
-      }
-   </style>
+         overflow: auto; /* To handle overflow content */
+       }
+     </style>
 </head>
 <body>
    <div class="wrapper">

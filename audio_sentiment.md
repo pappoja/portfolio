@@ -31,7 +31,7 @@ Next, to prepare the data as inputs into deep learning models, we front-padded t
 
 I built a custom transformer model to train on the processed data (and two other group members tested an FFN and LSTM model).  
 
-<img src="images/custom_transformer.png"/>
+<img src="images/transformer.png"/>
 
 This multi-head transformer model takes in the audio data and outputs predictions for each audio sample's emotion. First, the two-dimensional Mel-transformed data (495 timesteps, 296 Mel features) is passed into the model. Gaussian noise is then applied with a standard deviation of 0.1. After this, it is passed through a dense layer with 50 nodes in order to get 495 embeddings (one for each time step) with `embed_dim` =50.  
   

@@ -7,7 +7,7 @@
 
 ---
 [Stock Price Prediction](/docs/stock_prediction.html)
-<img src="images/stock_project_image.png"/>
+<img src="images/stock_project_image.png" style="transform: scale(0.5); transform-origin: top left;" />
 
 ---
 

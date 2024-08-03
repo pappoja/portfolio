@@ -20,7 +20,7 @@
 ### Class Projects
 
 [Audio Sentiment Analysis](/sample_page)
-<img src="images/dummy_thumbnail.jpg?raw=true"/>
+<img src="images/custom_transformer.png"/>
 
 ---
 [Stock Price Prediction](/pdf/sample_presentation.pdf)

@@ -25,7 +25,9 @@ After creating a dataset with 2 predictors (audio clip length and amplitude vari
   
 ### 3. Preprocessing
 
-Next, to prepare the data as inputs into deep learning models, we front-padded the data to a uniform size then converted the samples into mel spectrograms, which is a standard pre-processing step for audio ML models step that transforms the data from 1-D to 2-D.
+Next, to prepare the data as inputs into deep learning models, we front-padded the data to a uniform size then converted the samples into mel spectrograms. This is a standard pre-processing step for audio ML models that transforms the data from 1-D to 2-D.  
+
+<img src="images/mel_graph.png"/>
   
   
 ### 4. Model Training

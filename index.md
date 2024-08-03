@@ -20,11 +20,11 @@
 ### Class Projects
 
 [Audio Sentiment Analysis](/sample_page)
-<img src="images/audio_project_image.png">
+<img src="images/audio_project_image.png"/>
 
 ---
 [Stock Price Prediction](/pdf/sample_presentation.pdf)
-<img src="images/dummy_thumbnail.jpg?raw=true"/>
+<img src="images/stock_project_image.png"/>
 
 ---
 

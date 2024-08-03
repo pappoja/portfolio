@@ -2,7 +2,7 @@
 
 ### Class Projects
 
-[Audio Sentiment Analysis](/docs/audio_sentiment_copy.html)
+[Audio Sentiment Analysis](/sample_page)
 <img src="images/audio_project_image.png"/>
 
 ---

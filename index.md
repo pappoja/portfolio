@@ -3,11 +3,11 @@
 ### Class Projects
 
 [Audio Sentiment Analysis](/audio_sentiment)
-<img src="images/audio_project_image.png" style="transform: scale(0.5); transform-origin: top left;">
+<img src="images/audio_project_image.png">
 
 ---
 [Stock Price Prediction](/docs/stock_prediction.html)
-<img src="images/stock_project_image.png" style="transform: scale(0.5); transform-origin: top left;" />
+<img src="images/stock_project_image.png">
 
 ---
 

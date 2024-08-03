@@ -8,7 +8,7 @@ We explore a number of different model architectures to accurately classify each
 
 ### 1. Data
 
-Our data comes from the Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS). This database contains audios from 24 professional voice actors, 12 female and 12 male, each of whom, as stated by RAVDESS, have a “neutral North American accent”. There are two phrases which they all say. The first phrase is “Dogs are sitting by the door” and the other is “Kids are talking by the door”. Every actor says each phrase in 8 different emotional tones: “neutral”, “calm“, “happy“, “sad“, “angry“, “fearful“, “disgust“, “surprised“. Every tone except neutral also has an emotional intensity: “normal“ or “strong“. There are 1,440 audio samples, each a 1-dimensional array of amplitudes with an average length of 177,632.
+Our data comes from the Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS) (see some example clips [here](https://www.youtube.com/watch?v=UAFnlguE7Is)). This database contains audios from 24 professional voice actors, 12 female and 12 male, each of whom, as stated by RAVDESS, have a “neutral North American accent”. There are two phrases which they all say. The first phrase is “Dogs are sitting by the door” and the other is “Kids are talking by the door”. Every actor says each phrase in 8 different emotional tones: “neutral”, “calm“, “happy“, “sad“, “angry“, “fearful“, “disgust“, “surprised“. Every tone except neutral also has an emotional intensity: “normal“ or “strong“. There are 1,440 audio samples, each a 1-dimensional array of amplitudes with an average length of 177,632.
 
 <img src="images/audio_sample.png"/>
 

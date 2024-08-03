@@ -6,7 +6,7 @@
 <img src="images/audio_project_image.png"/>
 
 ---
-[Stock Price Prediction](/docs/stock_prediction.html))
+[Stock Price Prediction](/docs/stock_prediction.html)
 <img src="images/stock_project_image.png"/>
 
 ---

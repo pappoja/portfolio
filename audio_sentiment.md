@@ -10,17 +10,17 @@ We explore a number of different model architectures to accurately classify each
 
 Our data comes from the Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS) (see some example clips [here](https://www.youtube.com/watch?v=UAFnlguE7Is)). This database contains audios from 24 professional voice actors, 12 female and 12 male, each of whom, as stated by RAVDESS, have a “neutral North American accent”. There are two phrases which they all say. The first phrase is “Dogs are sitting by the door” and the other is “Kids are talking by the door”. Every actor says each phrase in 8 different emotional tones: “neutral”, “calm“, “happy“, “sad“, “angry“, “fearful“, “disgust“, and “surprised“. Every tone except neutral also has an emotional intensity: “normal“ or “strong“. This amounts to 1,440 total audio samples, each a 1-dimensional array of amplitudes with an average length of 177,632.
 
-<img src="images/audio_sample.png"/>
+<img src="images/audio_sample.png" style="display: block; margin: 0 auto;"/>
 
 ### 2. EDA and Baseline Model
 
 Before processing the data or training more complex deep learning models, we first explored the 1-D samples to see if there may be some distinguishing features. We found that there were notable differences in the lengths and amplitude variations (pictured below) of the 8 emotions.
 
-<img src="images/amplitude_distributions.png"/>
+<img src="images/amplitude_distributions.png" style="display: block; margin: 0 auto;" />
 
 After creating a dataset with 2 predictors (audio clip length and amplitude variation), we trained a simple logistic regression model to predict the emotion and establish a baseline. This achieved a test accuracy of 37.8%, and the confusion matrix below provides a more granular view of the results.
 
-<img src="images/logistic_confusion.png"/>
+<img src="images/logistic_confusion.png" style="display: block; margin: 0 auto;"/>
   
   
 ### 3. Preprocessing

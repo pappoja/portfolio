@@ -27,14 +27,14 @@ After creating a dataset with 2 predictors (audio clip length and amplitude vari
 
 Next, to prepare them as inputs for deep learning models, we front-padded the data to a uniform size then converted the samples into mel spectrograms. This is a standard pre-processing step for audio ML models that transforms the data from 1-D to 2-D.  
 
-<img src="images/mel_graph.png"/>
+<img src="images/mel_graph.png" style="display: block; margin: 0 auto;"/>
   
   
 ### 4. Model Training
 
 My main task was to build and train a custom transformer model on the processed data. The specific bidirectional encoder architecture is pictured below.
 
-<img src="images/transformer.png"/>
+<img src="images/transformer.png" style="display: block; margin: 0 auto;"/>
 
 This multi-head transformer model takes in the audio data and outputs predictions for each audio sample's emotion. First, the two-dimensional Mel-transformed data (495 timesteps, 296 Mel features) is passed into the model. Gaussian noise is then applied with a standard deviation of 0.1. After this, it is passed through a dense layer with 50 nodes in order to get 495 embeddings (one for each time step) with `embed_dim` = 50.  
   
@@ -44,10 +44,10 @@ These embeddings are then passed through 3 successive transformer layers. In eac
   
 After the embeddings have been transformed by the 3 transformer layers, a global average pooling layer converts the 495 x 50 matrix into a 1-dimensional vector of length 50, essentially creating one embedding that represents the entire audio sample. Finally, this is passed into the softmax output layer, which returns a probability distribution across the 8 emotions, with the highest value indicating the model's prediction. This model achieved an accuracy of 51.4%, and did so while being very light-weight, with a parameter count of only 377,000–over 250x less than that of the SOTA model described in the next section.
 
-<img src="images/transformer_confusion.png"/>  
+<img src="images/transformer_confusion.png" style="display: block; margin: 0 auto;"/>  
 
   
 ### 4. SOTA Model Fine-Tuning
 Lastly, we fine-tuned Facebook’s Wav2Vec 2.0 model, described in their [paper](https://arxiv.org/abs/2006.11477) “wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations.” This model has 95 million parameters and was trained on thousands of hours of raw speech audio data sampled at 16kHz. In order to implement the model, we used a Trainer object from the Transformers module, which is specialized for fine-tuning pretrained models. We also employed the Transformer module’s AutoFeatureExtractor class, which normalizes and processes the audio data in a manner required by the model. Our code was heavily inspired by this HuggingFace [tutorial](https://huggingface.co/docs/transformers/en/tasks/audio_classification) on fine tuning an audio model. Due to long training time and limited GPU access on colab (ran into various  pytorch dependency errors on Jupyter Hub), we were only able to train for 10 epochs, which took approximately 32 minutes. The model achieved the highest accuracy, at 62.5%.
 
-<img src="images/wav2vec2_confusion.png"/>  
+<img src="images/wav2vec2_confusion.png" style="display: block; margin: 0 auto;"/>  

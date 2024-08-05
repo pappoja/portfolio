@@ -8,31 +8,31 @@ We explore a number of different model architectures to accurately classify each
 
 ### 1. Data
 
-Our data comes from the Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS) (see some example clips [here](https://www.youtube.com/watch?v=UAFnlguE7Is)). This database contains audios from 24 professional voice actors, 12 female and 12 male, each of whom, as stated by RAVDESS, have a “neutral North American accent”. There are two phrases which they all say. The first phrase is “Dogs are sitting by the door” and the other is “Kids are talking by the door”. Every actor says each phrase in 8 different emotional tones: “neutral”, “calm“, “happy“, “sad“, “angry“, “fearful“, “disgust“, “surprised“. Every tone except neutral also has an emotional intensity: “normal“ or “strong“. There are 1,440 audio samples, each a 1-dimensional array of amplitudes with an average length of 177,632.
+Our data comes from the Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS) (see some example clips [here](https://www.youtube.com/watch?v=UAFnlguE7Is)). This database contains audios from 24 professional voice actors, 12 female and 12 male, each of whom, as stated by RAVDESS, have a “neutral North American accent”. There are two phrases which they all say. The first phrase is “Dogs are sitting by the door” and the other is “Kids are talking by the door”. Every actor says each phrase in 8 different emotional tones: “neutral”, “calm“, “happy“, “sad“, “angry“, “fearful“, “disgust“, and “surprised“. Every tone except neutral also has an emotional intensity: “normal“ or “strong“. This amounts to 1,440 total audio samples, each a 1-dimensional array of amplitudes with an average length of 177,632.
 
 <img src="images/audio_sample.png"/>
 
 ### 2. EDA and Baseline Model
 
-Before processing the data or training more complex deep learning models, we first explored the 1-D samples to see if there may be some distinguishing features. We found that there were non-trivial differences in the lengths and the variations (pictured below) of the amplitiudes between the emotions.
+Before processing the data or training more complex deep learning models, we first explored the 1-D samples to see if there may be some distinguishing features. We found that there were notable differences in the lengths and amplitude variations (pictured below) of the 8 emotions.
 
 <img src="images/amplitude_distributions.png"/>
 
-After creating a dataset with 2 predictors (audio clip length and amplitude variation) and 1 target (emotion), we trained a simple logistic regression model on it to establish a baseline. This achieved a test accuracy of 37.8%, and the confusion matrix is pictured below.
+After creating a dataset with 2 predictors (audio clip length and amplitude variation), we trained a simple logistic regression model to predict the emotion and establish a baseline. This achieved a test accuracy of 37.8%, and the confusion matrix below provides a more granular view of the results.
 
 <img src="images/logistic_confusion.png"/>
   
   
 ### 3. Preprocessing
 
-Next, to prepare the data as inputs into deep learning models, we front-padded the data to a uniform size then converted the samples into mel spectrograms. This is a standard pre-processing step for audio ML models that transforms the data from 1-D to 2-D.  
+Next, to prepare them as inputs for deep learning models, we front-padded the data to a uniform size then converted the samples into mel spectrograms. This is a standard pre-processing step for audio ML models that transforms the data from 1-D to 2-D.  
 
 <img src="images/mel_graph.png"/>
   
   
 ### 4. Model Training
 
-I built a custom transformer model to train on the processed data (and two other group members tested an FFN and LSTM model).  
+My main task was to build and train a custom transformer model on the processed data. The specific bidirectional encoder architecture is pictured below.
 
 <img src="images/transformer.png"/>
 

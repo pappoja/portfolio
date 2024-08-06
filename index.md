@@ -14,8 +14,8 @@
 
 ## Personal Projects
 
-### [Flight Delay Prediction](/sample_page)  
-<img src="images/dummy_thumbnail.jpg?raw=true"/>
+### [Bank Customer Churn Prediction](/docs/bank_churn.html)  
+<img src="images/bank_churn.png" class="project-image">
 
 ---
 ### [LLM-curated Personalized Newsletter](/pdf/sample_presentation.pdf)  

@@ -7,12 +7,12 @@
 <a href="/audio_sentiment">
   <img src="images/audio_project_image.png" class="project-image">
 </a>
----
 
 ### [Stock Price Prediction](/docs/stock_prediction.html)
 <a href="/docs/stock_prediction.html">
   <img src="images/stock_project_image.png" class="project-image">
-</a>
+</a>  
+
 ---
 
 ## Personal Projects
@@ -21,12 +21,10 @@
 <a href="/docs/bank_churn.html">
   <img src="images/bank_churn_image.png" class="project-image" style="width: 60%; height: auto;">
 </a>
----
 
 ### [LLM-curated Personalized Newsletter](/pdf/sample_presentation.pdf)  
 <img src="images/dummy_thumbnail.jpg?raw=true"/>
 
----
 ### [Web-scraped Data Analysis](http://example.com/)  
 <img src="images/dummy_thumbnail.jpg?raw=true"/>
 

@@ -9204,7 +9204,7 @@ Best Validation ROC AUC Score: 0.9410
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Fit the final XGB model</span>
-<span class="n">best_iteration</span> <span class="o">=</span> <span class="n">grid_search</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">best_iteration</span> <span class="o">+</span> <span class="mi">1</span> <span class="c1"># save for later</span>
+<span class="n">best_iteration</span> <span class="o">=</span> <span class="n">grid_search</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">best_iteration</span> <span class="o">+</span> <span class="mi">1</span>
 <span class="n">best_lr</span> <span class="o">=</span> <span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">'learning_rate'</span><span class="p">]</span>
 <span class="n">best_depth</span> <span class="o">=</span> <span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">'max_depth'</span><span class="p">]</span>
 

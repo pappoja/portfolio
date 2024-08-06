@@ -15,7 +15,7 @@
 ## Personal Projects
 
 ### [Bank Customer Churn Prediction](/docs/bank_churn.html)  
-<img src="images/bank_churn.png" class="project-image">
+<img src="images/churn_image.png" class="project-image">
 
 ---
 ### [LLM-curated Personalized Newsletter](/pdf/sample_presentation.pdf)  

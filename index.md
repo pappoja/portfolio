@@ -19,7 +19,7 @@
 
 ### [Bank Customer Churn Prediction](/docs/bank_churn.html)  
 <a href="/docs/bank_churn.html">
-  <img src="images/bank_churn_image.png" class="project-image" style="width: 75%; height: auto;">
+  <img src="images/bank_churn_image.png" class="project-image" style="width: 60%; height: auto;">
 </a>
 ---
 

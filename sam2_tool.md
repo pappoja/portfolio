@@ -48,6 +48,6 @@ The promptable nature of SAM 2 does not only allow us to instantiate masks, but 
 ### 5. Re-Run Inference for the Final Results
 We then run inference with SAM 2 again, now with an initial prompt that tells it which object to track and a downstream prompt to provide a course-correction. SAM 2 is now able to successfully track Marshawn Lynch throughout his turbulent trip to the endzone.
 
-The constant motion, sudden changes in direction, and presence of other players all add to the complexity of the scene. The accomplishment of such a difficult–and previously intractable–task demonstrates the robustness of SAM 2 and the bright future of spatiotemporal vision models.
-
 <img src="images/final_output.png" style="display: block; margin: 0 auto;"/>  
+
+The constant motion, sudden changes in direction, and presence of other players all add to the complexity of the scene. The accomplishment of such a difficult–and previously intractable–task demonstrates the robustness of SAM 2 and the bright future of spatiotemporal vision models for efficient video labeling, object tracking, and much more.

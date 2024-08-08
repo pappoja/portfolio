@@ -12,7 +12,7 @@ SAM 2's transformer-based architecture learns both motion- and appearance-based 
 
 Our data comes from the Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS) (see some example clips [here](https://www.youtube.com/watch?v=UAFnlguE7Is)). This database contains audios from 24 professional voice actors, 12 female and 12 male, each of whom, as stated by RAVDESS, have a “neutral North American accent”. There are two phrases which they all say. The first phrase is “Dogs are sitting by the door” and the other is “Kids are talking by the door”. Every actor says each phrase in 8 different emotional tones: “neutral”, “calm“, “happy“, “sad“, “angry“, “fearful“, “disgust“, and “surprised“. Every tone except neutral also has an emotional intensity: “normal“ or “strong“. This amounts to 1,440 total audio samples, each a 1-dimensional array of amplitudes with an average length of 177,632.
 
-<img src="images/audio_sample.png" style="display: block; margin: 0 auto;"/>
+<img src="images/sam2_architecture.png" style="display: block; margin: 0 auto;"/>
 
 ### 2. Prompt SAM 2
 

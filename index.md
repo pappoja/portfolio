@@ -18,7 +18,7 @@
 ## Personal Projects
 
 ### [A Video Segmentation Tool with Meta's SAM 2](/sam2_tool)  
-<a href="/docs/SAM2_labeling.fixed.html">
+<a href="/sam2_tool">
   <img src="images/SAM2_image.png" class="project-image" style="width:80%; height:auto;"/>
 </a>
 

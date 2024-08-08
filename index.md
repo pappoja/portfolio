@@ -22,8 +22,10 @@
   <img src="images/bank_churn_image.png" class="project-image" style="width: 70%; height: auto;">
 </a>
 
-### [Object Tracking and Labeling with Meta's SAM 2](/docs/SAM2_labeling.html)   
-<img src="images/dummy_thumbnail.jpg?raw=true"/>
+### [Object Tracking and Labeling with Meta's SAM 2](/docs/SAM2_labeling.fixed.html)   
+<a href="/docs/SAM2_labeling.fixed.html">
+  <img src="images/SAM2_image.png" class="project-image" style="width: 70%; height: auto;"/>
+</a>
 
 ### [LLM-curated Personalized Newsletter](/pdf/sample_presentation.pdf)  
 <img src="images/dummy_thumbnail.jpg?raw=true"/>

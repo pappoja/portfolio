@@ -19,12 +19,12 @@
 
 ### [Bank Customer Churn Prediction](/docs/bank_churn.html)  
 <a href="/docs/bank_churn.html">
-  <img src="images/bank_churn_image.png" class="project-image" style="width: 70%; height: auto;">
+  <img src="images/bank_churn_image.png" class="project-image"/>
 </a>
 
-### [Object Tracking and Labeling with Meta's SAM 2](/docs/SAM2_labeling.fixed.html)   
+### [Object Segmentation and Labeling with Meta's SAM 2](/docs/SAM2_labeling.fixed.html)   
 <a href="/docs/SAM2_labeling.fixed.html">
-  <img src="images/SAM2_image.png" class="project-image" style="width: 70%; height: auto;"/>
+  <img src="images/SAM2_image.png" class="project-image"/>
 </a>
 
 ### [LLM-curated Personalized Newsletter](/pdf/sample_presentation.pdf)  

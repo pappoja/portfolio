@@ -6,25 +6,27 @@
   
 The tool annotates the video by passing it through Meta's [SAM 2](https://ai.meta.com/sam2/) model and allowing a human-in-the-loop to correct its mistakes. SAM 2 is specifically designed for such a use case, as it is a *promptable* visual segmentation (PVS) model. Thus, before any object can be tracked, it must be identified in a given frame with a point(s), a bounding box, or a mask. After the initial prompt, SAM 2 will then track the object(s) throughout the video. If a given masklet is lost (e.g., from an occlusion), SAM 2 will require a new prompt in order to regain it.  
 
-SAM 2's transformer-based architecture learns both motion- and appearance-based features and outperforms many of the top existing tracker models. Its promptable nature also makes it especially well-suited for providing initial high-fidelity labels that can be further refined with just a few clicks.
-
-### 1. Create the SAM 2 Predictor
-
-Our data comes from the Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS) (see some example clips [here](https://www.youtube.com/watch?v=UAFnlguE7Is)). This database contains audios from 24 professional voice actors, 12 female and 12 male, each of whom, as stated by RAVDESS, have a “neutral North American accent”. There are two phrases which they all say. The first phrase is “Dogs are sitting by the door” and the other is “Kids are talking by the door”. Every actor says each phrase in 8 different emotional tones: “neutral”, “calm“, “happy“, “sad“, “angry“, “fearful“, “disgust“, and “surprised“. Every tone except neutral also has an emotional intensity: “normal“ or “strong“. This amounts to 1,440 total audio samples, each a 1-dimensional array of amplitudes with an average length of 177,632.
+SAM 2's transformer-based architecture learns both motion- and appearance-based features and outperforms many of the top existing tracker models. Its promptable nature also makes it especially well-suited for providing initial high-fidelity labels that can be further refined with just a few clicks.  
 
 <img src="images/sam2_architecture.png" style="display: block; margin: 0 auto;"/>
 
+### 1. Create the SAM 2 Predictor
+
+First, load in an instance of the SAM 2 model. An <code>Inference State</code> is then set from the predictor with respect to the input video. For this walk-through, I demonstrate the capabilities of SAM 2 in tracking Marshawn Lynch throughout one of his touchdown runs. I also use the "tiny" version of SAM 2 here, though it also comes in "small", "base+", and "large".
+
+<img src="images/sam2_models.png" style="display: block; margin: 0 auto;"/>
+
 ### 2. Prompt SAM 2
 
-Before processing the data or training more complex deep learning models, we first explored the 1-D samples to see if there may be some distinguishing features. We found that there were notable differences in the lengths and amplitude variations (pictured below) of the 8 emotions.
+Because SAM 2 is a promptable visual segmentation model, it cannot detect objects on its own but must be prompted with the object that it should segment and track. I created a user-friendly interface with which you can select points to isolate the object(s) of interest. First, you select the <code>Label</code> of the clicked point, with <span style="color: blue;">1</span> indicating that the point is on the object, and <span style="color: red;">0</span> indicating that it is not on the object. Also, the <code>Object ID</code> feature, though not used here, lets you prompt SAM 2 with multiple objects for independent segmentations. In the image below, I positively label points on Marshawn Lynch and negatively label points on the defender next to him in order to get an accurate mask for SAM 2 to propagate.
 
-<img src="images/amplitude_distributions.png" style="display: block; margin: 0 auto;" />
+<img src="images/frame0_labels.png" style="display: block; margin: 0 auto;"/>
 
-After creating a dataset with 2 predictors (audio clip length and amplitude variation), we trained a simple logistic regression model to predict the emotion and establish a baseline. This achieved a test accuracy of 37.8%, and the confusion matrix below provides a more granular view of the results.
+Given this prompt, SAM 2 returns a segmented mask for Lynch in this first frame. I also added a function that derives the implied bounding box from the mask. This is especially useful for providing labeled data that can be used to fine-tune and evaluate object detection and tracking models that are trained on bounding boxes.
 
-<img src="images/logistic_confusion.png" style="display: block; margin: 0 auto;"/>
+<img src="images/frame0_mask.png" style="display: block; margin: 0 auto;"/>
   
-  
+
 ### 3. Run Inference
 
 Next, to prepare them as inputs for deep learning models, we front-padded the data to a uniform size then converted the samples into mel spectrograms. This is a standard pre-processing step for audio ML models that transforms the data from 1-D to 2-D.  

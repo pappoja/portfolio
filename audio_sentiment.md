@@ -1,5 +1,5 @@
 ## Audio Sentiment Analysis
-###### (see the full notebook [here](/docs/audio_sentiment_copy.html))  
+#### (see the full notebook [here](/docs/audio_sentiment_copy.html))  
   
   
 **Project description:** The aim of this project is to develop a robust emotion classification system capable of accurately identifying the emotional state of a speaker based on an audio clip of their speech. Emotion classification from audio presents a considerable challenge due to the inherent variability in speech patterns, pitch & tones, and the subjective nature of emotions. But the benenfits of such a model are apparent; its depolyment in voice assistants or sentiment analysis tools would enable timely and accurate emotion recognition from audio inputs, fostering advancements in human-computer interaction and affective computing. 

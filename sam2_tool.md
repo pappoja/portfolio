@@ -51,3 +51,11 @@ We then run inference with SAM 2 again, now with an initial prompt that tells it
 <img src="images/final_output.png" style="display: block; margin: 0 auto;"/>  
 
 The constant motion, sudden changes in direction, and presence of other players all add to the complexity of the scene. The accomplishment of such a difficult–and previously intractable–task demonstrates the robustness of SAM 2 and the bright future of spatiotemporal vision models for efficient video labeling, object tracking, and much more.
+
+@article{ravi2024sam2,
+  title={SAM 2: Segment Anything in Images and Videos},
+  author={Ravi, Nikhila and Gabeur, Valentin and Hu, Yuan-Ting and Hu, Ronghang and Ryali, Chaitanya and Ma, Tengyu and Khedr, Haitham and R{\"a}dle, Roman and Rolland, Chloe and Gustafson, Laura and Mintun, Eric and Pan, Junting and Alwala, Kalyan Vasudev and Carion, Nicolas and Wu, Chao-Yuan and Girshick, Ross and Doll{\'a}r, Piotr and Feichtenhofer, Christoph},
+  journal={arXiv preprint arXiv:2408.00714},
+  url={https://arxiv.org/abs/2408.00714},
+  year={2024}
+}

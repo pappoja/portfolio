@@ -27,8 +27,6 @@
   <img src="images/bank_churn_image.png" class="project-image" style="width:80%; height:auto;"/>
 </a>
 
-### [LLM-curated Personalized Newsletter](/pdf/sample_presentation.pdf)  
-<img src="images/dummy_thumbnail.jpg?raw=true"/>
 
 ---
 

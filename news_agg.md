@@ -10,45 +10,56 @@ First, information is collected on each article, such as the title and date publ
 
 Most major publications have public RSS feeds that contain information on each article, including the title, description, link, source, and date published. Here, I access RSS feeds from my favorite news sources: *The New York Times*, *The Wall Stree Journal*, and *Financial Times*. I use [feedparser](https://feedparser.readthedocs.io/en/latest/)–designed specifically for RSS feeds–and [Beautiful Soup](https://beautiful-soup-4.readthedocs.io/en/latest/) to take the relevant information out of each feed's XML format. I then combine the data from each feed into one dataframe.  
 
-Pictured below is a snippet from the RSS feed for the Technology section of *The New York Times*, and, more specifically, the first listed article: "OpenAI, Maker of ChatGPT, Is Trying to Grow Up". Note how its metadata is stored in a standardized set of tags, such as `<title>`, `<link>`, and `<description>`. This format is also standard across publications, allowing libraries like feedparser to efficiently extract information from any RSS feed.
+Pictured below is a snippet from the RSS feed for the Technology section of *The New York Times*, and, more specifically, the first listed article: "OpenAI, Maker of ChatGPT, Is Trying to Grow Up". Note how its metadata is stored in a standardized set of tags, such as `<title>`, `<link>`, and `<description>`. This format is also standardized across publications, allowing libraries like feedparser to efficiently extract information from any RSS feed.
 
 <img src="images/nyt_rss.png" style="display: block; margin: 0 auto;"/>
 
 ### 2. Feature Engineering
 
-Some features can be added to those provided in the metadata directly from the RSS feeds. Firstly, the publication date can be compared against the current day's date to create the more informative `days_old` feature. This leaves us with these columns: 
+The relevant features provided in the metadata of the RSS feeds are shown below.
 
 <img src="images/sample_df.png" style="display: block; margin: 0 auto;"/>
 
-Although *NYT* and *FT* provide data on the categories included in each article, such is not the case for *WSJ*, as seen in the empty `categories` column above. On top of this, the set of categories are not standardized between publications and also tend to be overly specific, thus preventing them from providing generalizable features for training a recommendation model. Therefore, I utilize a [fine-tuned BERT model](https://huggingface.co/fabriceyhc/bert-base-uncased-ag_news) trained on the [AG News dataset](https://huggingface.co/datasets/fancyzhx/ag_news), which takes in the concatenated `title` and `description` of an article and predicts one of four categories for the article (Business, Sci/Tech, Sports, World).
+Firstly, the publication date can be compared against the current day's date to create a more informative `days_old` feature. Secondly, although *NYT* and *FT* provide data on the categories included in each article, such is not the case for *WSJ*, as seen in the third row's empty `categories` entry above. On top of this, the set of categories are not standardized between publications and also tend to be overly specific, thus limiting their generalizablility and predictive potential for a recommendation model.  
+  
+Existing LLMs can be used to enrich the dataset by classifying articles based on their associated textual data. I utilize a [fine-tuned BERT model](https://huggingface.co/fabriceyhc/bert-base-uncased-ag_news) trained on the [AG News dataset](https://huggingface.co/datasets/fancyzhx/ag_news), which takes in the concatenated `title` and `description` of an article and predicts one of four categories: `Business`, `Sci/Tech`, `Sports`, or `World`. In the sample articles above, BERT accurately assigns `Sci/Tech` to the first article about a brain study, `World` for the second article about emigration in Venezuela, and `Business` for the third article about the US electric vehicle market. This creates the new variable `predicted_category`–standardized across all publications–that can be used to make high-level distinctions between articles.
   
   
-### 3. Preprocessing
+### 3. Automated Script for Daily Article Updates
 
-Next, to prepare them as inputs for deep learning models, we front-padded the data to a uniform size then converted the samples into mel spectrograms. This is a standard pre-processing step for audio ML models that transforms the data from 1-D to 2-D.  
+Although I can successfully parse the article data and load it into a DataFrame, the RSS feeds are constantly updating. To ensure that all published articles are captured, the data collection functions need to be run daily. Therefore, I created a Bash script to automate the daily execution of `update_articles.py`, which does the following:  
+  1) Loads in article data from the current day's RSS feeds
+  2) Calculates new features (`days_old` and `predicted_category`)
+  3) Updates the ongoing article database by merging in the current day's entries
 
-<img src="images/mel_graph.png" style="display: block; margin: 0 auto;"/>
-  
-  
-### 4. Model Training
+Here’s the Bash script used for automation:
+```bash
+#!/bin/bash
 
-My main task was to build and train a custom transformer model on the processed data. The specific bidirectional encoder architecture is pictured below.
+# File to track the last run date
+LAST_RUN_FILE="/tmp/last_update_articles_run"
 
-<img src="images/transformer.png" style="display: block; margin: 0 auto;"/>
+# Get today's date
+TODAY=$(date +%Y-%m-%d)
 
-This multi-head transformer model takes in the audio data and outputs predictions for each audio sample's emotion. First, the two-dimensional Mel-transformed data (495 timesteps, 296 Mel features) is passed into the model. Gaussian noise is then applied with a standard deviation of 0.1. After this, it is passed through a dense layer with 50 nodes in order to get 495 embeddings (one for each time step) with `embed_dim` = 50.  
-  
-Drawing inspiration from the DeBERTa model, a custom relative positional encoder was used rather than a fixed sinusoidal positional encoder, as in traditional transformers. First, I created a `get_relative_positions` function to create a matrix that stores the distances between each of the 495 timestep vectors in the audio data. Then a `get_relative_positional_encoding` function converts each relative position into a vector of size `embed_dim` = 50 so that they can be added to the embeddings.
-  
-These embeddings are then passed through 3 successive transformer layers. In each layer, ten-head attention is applied, meaning each head receives one-tenth of the embeddings (i.e., vectors of length 5). Dropout is also applied to the multi-head attention step with a rate of 0.2. The output from the attention step is added to its original input (a skip connection) and layer-normalized. Then it is passed through a feed-forward network in which the first dense layer has 192 nodes and the next dense layer has 50 nodes in order to reshape it back to the original size of the embedding, `embed_dim` = 50. An add-and-normalize step is also in the FFN stage.  
-  
-After the embeddings have been transformed by the 3 transformer layers, a global average pooling layer converts the 495 x 50 matrix into a 1-dimensional vector of length 50, essentially creating one embedding that represents the entire audio sample. Finally, this is passed into the softmax output layer, which returns a probability distribution across the 8 emotions, with the highest value indicating the model's prediction. This model achieved an accuracy of 51.4%, and did so while being very light-weight, with a parameter count of only 377,000–over 250x less than that of the SOTA model described in the next section.
+# Check if the script has already run today
+if [ -f "$LAST_RUN_FILE" ] && [ "$(cat $LAST_RUN_FILE)" == "$TODAY" ]; then
+    echo "Script has already run today. Exiting." >> /tmp/update_articles.log
+    exit 0
+fi
 
-<img src="images/transformer_confusion.png" style="display: block; margin: 0 auto;"/>  
+# Log start time
+echo "Script started at $(date)" >> /tmp/update_articles.log
 
-  
-### 4. SOTA Model Fine-Tuning
-Lastly, we fine-tuned Facebook’s Wav2Vec 2.0 model, described in their [paper](https://arxiv.org/abs/2006.11477) “wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations.” This model has 95 million parameters and was trained on thousands of hours of raw speech audio data sampled at 16kHz. In order to implement the model, we used a Trainer object from the Transformers module, which is specialized for fine-tuning pretrained models. We also employed the Transformer module’s AutoFeatureExtractor class, which normalizes and processes the audio data in a manner required by the model. Our code was heavily inspired by this HuggingFace [tutorial](https://huggingface.co/docs/transformers/en/tasks/audio_classification) on fine tuning an audio model. Due to long training time and limited GPU access on colab (ran into various  pytorch dependency errors on Jupyter Hub), we were only able to train for 10 epochs, which took approximately 32 minutes. The model achieved the highest accuracy, at 62.5%.
+# Run the Python script
+/Users/jakepappo/micromamba/envs/sauron/bin/python3 /Users/jakepappo/Documents/Stuff/Projects/news_agg/update_articles.py >> /tmp/update_articles.log 2>&1
 
-<img src="images/wav2vec2_confusion.png" style="display: block; margin: 0 auto;"/>  
+# Log end time
+echo "Script finished at $(date)" >> /tmp/update_articles.log
+
+# Update the last run date
+echo "$TODAY" > "$LAST_RUN_FILE"
+```
+
+This script first checks to see if it has already been successfully run today. If not, it logs the start time, executes the Python script, logs the end time, and updates the last run date. This ensures that the data collection process is performed daily without manual intervention.
 

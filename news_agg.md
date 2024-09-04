@@ -2,9 +2,9 @@
 ##### (see the code [here](/docs/news_agg.html))  
   
   
-**Project description:** In this project, I create a tool that saves me the time of searching through a sea of articles from multiple news sources to find those that interest me. I do so by building a smart news aggregator that automatically reads in the daily article feeds from my go-to news sources and selects those that I would be most likely to read.
+**Project description:** In this project, I create a tool that saves me the time of scrolling through multiple news sources in order to find articles that interest me. I do so by building a smart news aggregator that automatically reads in the daily article feeds from my go-to news sources and selects those that I would be most likely to read.
 
-First, information is collected on each article, such as the title and date published, and loaded into a dataframe. In addition to the supplied features, I use a fine-tuned BERT model that assigns a category to the article based on a short summary. To get personal preferences for the recommender, I created a script that prompts me with the title and description of each article so that I can label them with a `1` to indicate that I would read it or a `0` to indicate that I would not. Models are then trained to learn my preferences, effectively predicting the articles that I would read then suggesting them to me.
+First, information is collected on each article and loaded into a dataframe. In addition to the publicly available metadata, I use a fine-tuned BERT model that assigns a category to each article. To get personal preferences for the recommender, I label each article with a `1` to indicate that I would read it or a `0` to indicate that I would not. Models are then trained to learn my preferences, effectively predicting the articles that I would read then suggesting them to me.
 
 ### 1. Data Collection
 
@@ -56,4 +56,23 @@ echo "$TODAY" > "$LAST_RUN_FILE"
 This script first checks to see if it has already been successfully run today. If not, it logs the start time, executes the Python script, logs the end time, and updates the last run date. This ensures that the data collection process is performed daily without manual intervention.  
 
 To automate the execution of this Bash script on a daily basis, I created a .plist file for a LaunchAgent. The .plist file is a configuration that tells the macOS launchd system to trigger the Bash script at specific times or events. In this case, the LaunchAgent is configured to run the script as soon as I log into my Mac. It ensures that the script is executed every day and restarts if it fails, providing a robust and automated solution to manage daily data collection.
+
+
+### 4. Labeling Article Preferences
+
+Like any model, I will need labels for the variable that I am trying to predict. In this case, I want to create a model that learns what articles interest me. I encode this variable, which we will call `label`, as a binary indicator variable such that:
+
+$$
+\text{label} =
+\begin{cases} 
+1, & \text{if I want to read the article} \\
+0, & \text{if I do not} 
+\end{cases}
+$$
+
+The binary encoding approach is not only simpler than, say, rating each article on a scale from 1 to 10, but it also mirrors a more practical and scalable user data collection strategy. Instead of manually labeling the data as I am doing now, these `1`s and `0`s can be implicitly gathered by tracking whether or not I clicked on an article. Therefore, this method can seamlessly integrate with natural user behavior, allowing for efficient data collection without requiring the friction of active user inputs.
+
+In order to label the data, I created a script that prompts the user (i.e., me) with the title and description of each article, then accepts either a `1` or `0`, which is then plugged into that article's `label` value in the dataframe. The below screenshot from my command line shows the labeling function in use:  
+
+<img src="images/labeling_cli.png" style="display: block; margin: 0 auto;"/>
 

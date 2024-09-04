@@ -1,5 +1,5 @@
 ## SAM 2 Annotation Tool
-##### (see the full notebook [here](/docs/SAM2_tool.fixed.html))  
+##### (see code [here](https://github.com/pappoja/SAM2_Tool))  
   
   
 **Project description:** In this project, I walk through a user-friendly tool that I created to run SOTA video segmentation and auto-label data for object detection and tracking tasks.

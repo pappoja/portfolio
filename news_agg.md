@@ -33,6 +33,7 @@ Although I can successfully parse the article data and load it into a DataFrame,
   3) Updates the ongoing article database by merging in the current day's entries 
 
 Here’s the Bash script used for automation:
+<pre style="font-size: 10px;">
 ```bash
 #!/bin/bash
 
@@ -60,6 +61,7 @@ echo "Script finished at $(date)" >> /tmp/update_articles.log
 # Update the last run date
 echo "$TODAY" > "$LAST_RUN_FILE"
 ```
+</pre>
 
 This script first checks to see if it has already been successfully run today. If not, it logs the start time, executes the Python script, logs the end time, and updates the last run date. This ensures that the data collection process is performed daily without manual intervention.
 

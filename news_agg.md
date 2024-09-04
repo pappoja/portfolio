@@ -1,5 +1,5 @@
 ## Personalized News Aggregator
-##### (see full notebook [here](/docs/news_agg.html))  
+##### (see the code [here](/docs/news_agg.html))  
   
   
 **Project description:** In this project, I create a tool that saves me the time of searching through a sea of articles from multiple news sources to find those that interest me. I do so by building a smart news aggregator that automatically reads in the daily article feeds from my go-to news sources and selects those that I would be most likely to read.
@@ -55,5 +55,5 @@ echo "$TODAY" > "$LAST_RUN_FILE"
 
 This script first checks to see if it has already been successfully run today. If not, it logs the start time, executes the Python script, logs the end time, and updates the last run date. This ensures that the data collection process is performed daily without manual intervention.  
 
-To automate the execution of this Bash script on a daily basis, I created a .plist file for a LaunchAgent. The .plist file is a configuration that tells the macOS launchd system to trigger the Bash script at specific times or events. In this case, the LaunchAgent is configured to run the script immediately upon system login and ensures that the script restarts if it fails, providing a robust and automated solution to manage daily data collection.
+To automate the execution of this Bash script on a daily basis, I created a .plist file for a LaunchAgent. The .plist file is a configuration that tells the macOS launchd system to trigger the Bash script at specific times or events. In this case, the LaunchAgent is configured to run the script as soon as I log into my Mac. It ensures that the script is executed every day and restarts if it fails, providing a robust and automated solution to manage daily data collection.
 

@@ -33,7 +33,7 @@ Although I can successfully parse the article data and load it into a DataFrame,
   3) Updates the ongoing article database by merging in the current day's entries 
 
 Here’s the Bash script used for automation:
-<pre style="font-size: 10px;">
+<pre style="font-size: 5px;">
 ```bash
 #!/bin/bash
 

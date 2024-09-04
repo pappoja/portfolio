@@ -30,7 +30,7 @@ Existing LLMs can be used to enrich the dataset by classifying articles based on
 Although I can successfully parse the article data and load it into a DataFrame, the RSS feeds are constantly updating. To ensure that all published articles are captured, the data collection functions need to be run daily. Therefore, I created a Bash script to automate the daily execution of `update_articles.py`, which does the following:  
   1) Loads in article data from the current day's RSS feeds  
   2) Calculates new features (`days_old` and `predicted_category`)  
-  3) Updates the ongoing article database by merging in the current day's entries  
+  3) Updates the ongoing article database by merging in the current day's entries 
 
 Here’s the Bash script used for automation:
 ```bash

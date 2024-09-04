@@ -18,7 +18,7 @@
 ## Personal Projects
 
 ### [Personalized News Aggregator](/news_agg)  
-<a href="/docs/bank_churn.html">
+<a href="/news_agg">
   <img src="images/news_agg_image.png" class="project-image" style="width:80%; height:auto;"/>
 </a>
 

@@ -64,13 +64,7 @@ To automate the execution of this Bash script on a daily basis, I created a .pli
 
 Like any model, I will need labels for the variable that I am trying to predict. In this case, I want to create a model that learns what articles interest me. I encode this variable, which we will call `label`, as a binary indicator variable such that:
 
-$$
-\text{label} =
-\begin{cases} 
-1, & \text{if I want to read the article} \\
-0, & \text{if I do not} 
-\end{cases}
-$$
+<img src="images/label_piecewise.png" style="display: block; margin: 0 auto;"/>
 
 The binary encoding approach is not only simpler than, say, rating each article on a scale from 1 to 10, but it also mirrors a more practical and scalable user data collection strategy. Instead of manually labeling the data as I am doing now, these `1`s and `0`s can be implicitly gathered by tracking whether or not I clicked on an article. Therefore, this method can seamlessly integrate with natural user behavior, allowing for efficient data collection without requiring the friction of active user inputs.
 
@@ -81,9 +75,9 @@ In order to label the data, I created a script that prompts the user (i.e., me) 
 
 ### 5. Pre-Processing
 
-Because there is not a significant amount of data, traditional ML models will be trained on the tabular dataframe to predict the label. However, as the article archive grows from the daily updates, it will get to the point at which deep learning models like an RNN or BERT are the best solutions. For now, though, the text data must be processed before being fed into the model. Here I use a common approach of using sklearn's [TfidfVectorizer](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html).
+Because there is not a significant amount of data, traditional ML models will be trained on the tabular dataframe to predict the label. However, as the article archive grows from the daily updates, it will get to the point at which training/fine-tuning an RNN- or transformer-based model is the best solution. For now, though, the text data must be processed before being fed into the model. Here I use a common approach of using sklearn's [TfidfVectorizer](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html).
   
-First, the title and description are concatenated into a single text variable. For each article, the TfidfVectorizer then converts the words in the vocabulary into TF-IDF scores. These scores balance the term frequency (TF), which measures how often a word appears in an article, with the inverse document frequency (IDF), which downweights words that are common across all articles. While this approach may not capture complex relationships or context within the text, it efficiently generates numerical representations that emphasize the most significant words associoated with each article.
+First, the title and description are concatenated into a single text variable. For each article, the TfidfVectorizer then converts the words in the vocabulary into TF-IDF scores. These scores balance the term frequency (TF), which measures how often a word appears in an article, with the inverse document frequency (IDF), which downweights words that are common across all articles. While this approach may not capture complex contextual relationships within the text, it efficiently generates numerical representations that emphasize the most significant words associoated with each article.
 
 The other predictors in the dataset–such as `source` and `predicted_category`–are categorical. Therefore, I one-hot encode them so that they can be handled by an ML model
 

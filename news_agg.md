@@ -6,6 +6,7 @@
 
 First, information is collected on each article and loaded into a dataframe. In addition to the publicly available metadata, I use a fine-tuned BERT model that assigns a category to each article. To get personal preferences for the recommender, I label each article with a `1` to indicate that I would read it or a `0` to indicate that I would not. Models are then trained to learn my preferences, effectively predicting the articles that I would read then suggesting them to me.
 
+
 ### 1. Data Collection
 
 Most major publications have public RSS feeds that contain information on each article, including the title, description, link, source, and  publication date. Here, I access RSS feeds from my favorite news sources: *The New York Times*, *The Wall Stree Journal*, and *Financial Times*. I use [feedparser](https://feedparser.readthedocs.io/en/latest/)–designed specifically for RSS feeds–and [Beautiful Soup](https://beautiful-soup-4.readthedocs.io/en/latest/) to take the relevant information out of each feed's XML format. I then combine the data from each feed into one dataframe.  
@@ -13,6 +14,7 @@ Most major publications have public RSS feeds that contain information on each a
 Pictured below is a snippet from the RSS feed for the Technology section of *The New York Times*, and, more specifically, the first listed article: "OpenAI, Maker of ChatGPT, Is Trying to Grow Up". Note how its metadata is stored in a standardized set of tags, such as `<title>`, `<link>`, and `<description>`. This format is also standardized across publications, allowing libraries like feedparser to efficiently extract information from any RSS feed.
 
 <img src="images/nyt_rss.png" style="display: block; margin: 0 auto;"/>
+
 
 ### 2. Feature Engineering
 
@@ -72,7 +74,19 @@ $$
 
 The binary encoding approach is not only simpler than, say, rating each article on a scale from 1 to 10, but it also mirrors a more practical and scalable user data collection strategy. Instead of manually labeling the data as I am doing now, these `1`s and `0`s can be implicitly gathered by tracking whether or not I clicked on an article. Therefore, this method can seamlessly integrate with natural user behavior, allowing for efficient data collection without requiring the friction of active user inputs.
 
-In order to label the data, I created a script that prompts the user (i.e., me) with the title and description of each article, then accepts either a `1` or `0`, which is then plugged into that article's `label` value in the dataframe. The below screenshot from my command line shows the labeling function in use:  
+In order to label the data, I created a script that prompts the user (i.e., me) with the title and description of each article, then accepts either a `1` or `0`, which is then plugged into that article's `label` value in the dataframe. At scale, this script would be replaced with the aforementioned tracker that records whether a user clicked on an article. The below screenshot from my command line shows the labeling function in use:  
 
 <img src="images/labeling_cli.png" style="display: block; margin: 0 auto;"/>
+
+
+### 5. Pre-Processing
+
+Because there is not a significant amount of data, traditional ML models will be trained on the tabular dataframe to predict the label. However, as the article archive grows from the daily updates, it will get to the point at which deep learning models like an RNN or BERT are the best solutions. For now, though, the text data must be processed before being fed into the model. Here I use a common approach of using sklearn's [TfidfVectorizer](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html).
+  
+First, the title and description are concatenated into a single text variable. For each article, the TfidfVectorizer then converts the words in the vocabulary into TF-IDF scores. These scores balance the term frequency (TF), which measures how often a word appears in an article, with the inverse document frequency (IDF), which downweights words that are common across all articles. While this approach may not capture complex relationships or context within the text, it efficiently generates numerical representations that emphasize the most significant words associoated with each article.
+
+The other predictors in the dataset–such as `source` and `predicted_category`–are categorical. Therefore, I one-hot encode them so that they can be handled by an ML model
+
+
+### 6. Recommendation Modeling
 

@@ -17,6 +17,11 @@
 
 ## Personal Projects
 
+### [Personalized News Recommender](/docs/news_agg.html)  
+<a href="/docs/bank_churn.html">
+  <img src="images/news_agg_image.png" class="project-image" style="width:80%; height:auto;"/>
+</a>
+
 ### [A Video Segmentation Tool with Meta's SAM 2](/sam2_tool)  
 <a href="/sam2_tool">
   <img src="images/SAM2_image.png" class="project-image" style="width:80%; height:auto;"/>

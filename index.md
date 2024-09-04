@@ -17,7 +17,7 @@
 
 ## Personal Projects
 
-### [Personalized News Recommender](/docs/news_agg.html)  
+### [Personalized News Recommender](/news_agg)  
 <a href="/docs/bank_churn.html">
   <img src="images/news_agg_image.png" class="project-image" style="width:80%; height:auto;"/>
 </a>

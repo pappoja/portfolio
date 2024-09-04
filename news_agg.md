@@ -4,7 +4,7 @@
   
 **Project description:** In this project, I create a tool that saves me the time of searching through a sea of articles from multiple news sources to find those that interest me. I do so by building a smart news aggregator that automatically reads in the daily article feeds from my go-to news sources and selects those that I would be most likely to read.
 
-First, information is collected on each article, such as the title and date published, and loaded into a dataframe. In addition to the supplied features, I use a [fine-tuned BERT model](https://huggingface.co/fabriceyhc/bert-base-uncased-ag_news) that assigns an article to one of four broad categories based on a short summary. To get personal preferences for the recommender, I created a script that prompts me with the title and description of each article so that I can label them with a `1` to indicate that I would read it or a `0` to indicate that I would not. Models are then trained to learn my preferences, effectively predicting the articles that I would read then suggesting them to me.
+First, information is collected on each article, such as the title and date published, and loaded into a dataframe. In addition to the supplied features, I use a fine-tuned BERT model that assigns a category to the article based on a short summary. To get personal preferences for the recommender, I created a script that prompts me with the title and description of each article so that I can label them with a `1` to indicate that I would read it or a `0` to indicate that I would not. Models are then trained to learn my preferences, effectively predicting the articles that I would read then suggesting them to me.
 
 ### 1. Data Collection
 
@@ -14,15 +14,13 @@ Pictured below is a snippet from the RSS feed for the Technology section of *The
 
 <img src="images/nyt_rss.png" style="display: block; margin: 0 auto;"/>
 
-### 2. EDA and Baseline Model
+### 2. Feature Engineering
 
-Before processing the data or training more complex deep learning models, we first explored the 1-D samples to see if there may be some distinguishing features. We found that there were notable differences in the lengths and amplitude variations (pictured below) of the 8 emotions.
+Some features can be added to those provided in the metadata directly from the RSS feeds. Firstly, the publication date can be compared against the current day's date to create the more informative `days_old` feature. This leaves us with these columns: 
 
-<img src="images/amplitude_distributions.png" style="display: block; margin: 0 auto;" />
+<img src="images/sample_df.png" style="display: block; margin: 0 auto;"/>
 
-After creating a dataset with 2 predictors (audio clip length and amplitude variation), we trained a simple logistic regression model to predict the emotion and establish a baseline. This achieved a test accuracy of 37.8%, and the confusion matrix below provides a more granular view of the results.
-
-<img src="images/logistic_confusion.png" style="display: block; margin: 0 auto;"/>
+Although *NYT* and *FT* provide data on the categories included in each article, such is not the case for *WSJ*, as seen in the empty `categories` column above. On top of this, the set of categories are not standardized between publications and also tend to be overly specific, thus preventing them from providing generalizable features for training a recommendation model. Therefore, I utilize a [fine-tuned BERT model](https://huggingface.co/fabriceyhc/bert-base-uncased-ag_news) trained on the [AG News dataset](https://huggingface.co/datasets/fancyzhx/ag_news), which takes in the concatenated `title` and `description` of an article and predicts one of four categories for the article (Business, Sci/Tech, Sports, World).
   
   
 ### 3. Preprocessing

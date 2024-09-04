@@ -68,7 +68,7 @@ Like any model, I will need labels for the variable that I am trying to predict.
 
 The binary encoding approach is not only simpler than, say, rating each article on a scale from 1 to 10, but it also mirrors a more practical and scalable user data collection strategy. Instead of manually labeling the data as I am doing now, these `1`s and `0`s can be implicitly gathered by tracking whether or not I clicked on an article. Therefore, this method can seamlessly integrate with natural user behavior, allowing for efficient data collection without requiring the friction of active user inputs.
 
-In order to label the data, I created a script that prompts the user (i.e., me) with the title and description of each article, then accepts either a `1` or `0`, which is then plugged into that article's `label` value in the dataframe. At scale, this script would be replaced with the aforementioned tracker that records whether a user clicked on an article. The below screenshot from my command line shows the labeling function in use:  
+In order to label the data, I created a script that prompts the user (i.e., me) with the title and description of each article, accepts either a `1` or `0`, then plugs this value into that article's `label` entry in the dataframe. At scale, this script would be replaced with the aforementioned tracker that records whether a user clicked on an article. The below screenshot from my command line shows the labeling function in use:  
 
 <img src="images/labeling_cli.png" style="display: block; margin: 0 auto;"/>
 

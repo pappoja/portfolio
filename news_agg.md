@@ -116,5 +116,16 @@ I also fit a random forest model, in which I used `GridSearchCV` to find the bes
 
 ### 7. Making Recommendations
 
+The logistic regression model is now capable of analyzing a large collection of unlabeled (and presumably new) articles to identify those that are most likely to be of interest to me. The model predicts the probability that label = 1 (i.e., articles I would likely want to read), with the confidence score serving as a proxy for how engaging or relevant the article might be. However, simply recommending the top *n* articles based on this confidence score alone is not an ideal solution for two main reasons.
 
+**Ensuring Topic Diversity in the User Experience**
+- Recommending only the highest-scoring articles can trap users in content echo chambers, reinforcing their existing preferences and limiting exposure to a broader range of topics. This can be avoided by incorporating a balance of high-confidence articles with a curated selection of diverse content. This strategy keeps the user experience fresh and encourages the exploration of topics outside their regular interests.
 
+**Model Improvement Through Feedback**
+- To continually improve the model’s accuracy and relevance, it’s crucial to provide a diverse set of articles, including random selections. Showing only high-confidence articles will limit the variety of feedback the model receives, making it difficult to capture evolving user preferences over time. By presenting a mix of familiar and unexpected content, the tool enables continuous learning about my evolving interests. Over time, this leads to more accurate recommendations, making the reading experience more engaging and personalized, while still providing exposure to new topics.
+
+Therefore, I created a `recommend_articles()` function with the following logic:
+	1.	Find the Most Relevant Articles: The function first selects the top 10 articles that are predicted to be most relevant to me based on the model's predicted probability that their `label = 1`. 
+	2.	Ensure Category Diversity: To avoid overloading one category, the function checks that each category (from the four `predicted_category` values) has at least two articles. If any category is underrepresented, it removes a less relevant article from an overrepresented category and replaces it with a more relevant article from the lacking category. This ensures a mix of content across different topics.
+	3.	Add Random Articles for Variety: To keep things fresh and help the model learn more about my preferences, the function randomly selects five additional articles that weren’t picked in the first round. This helps avoid showing the same type of content repeatedly.
+	4.	Recommendations: After the articles are carefully selected based on relevance and diversity, the tool presents the final list of 15 articles to me, each accompanied by the relevant information such as the title, description, and a direct link to the full article.

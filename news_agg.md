@@ -22,16 +22,16 @@ The relevant features provided in the metadata of the RSS feeds are shown below.
 
 <img src="images/sample_df.png" style="display: block; margin: 0 auto;"/>
 
-Firstly, the publication date can be compared against the current day's date to create a more informative `days_old` feature. Secondly, although *NYT* and *FT* provide data on the categories included in each article, such is not the case for *WSJ*, as seen in the third row's empty `categories` entry above. On top of this, the set of categories are not standardized between publications and also tend to be overly specific, thus limiting their generalizablility and predictive potential for a recommendation model.  
+Firstly, the publication date can be compared against the current day's date to create a more informative `days_old` feature. Because this variable would have to be updated every day, it is only computed before model training time. Secondly, although *NYT* and *FT* provide data on the categories included in each article, such is not the case for *WSJ*, as seen in the third row's empty `categories` entry above. On top of this, the set of categories are not standardized between publications and also tend to be overly specific, thus limiting their generalizablility and predictive potential for a recommendation model.  
   
-Existing LLMs can be used to enrich the dataset by classifying articles based on their associated textual data. I utilize a [fine-tuned BERT model](https://huggingface.co/fabriceyhc/bert-base-uncased-ag_news) trained on the [AG News dataset](https://huggingface.co/datasets/fancyzhx/ag_news), which takes in the concatenated `title` and `description` of an article and predicts one of four categories: `Business`, `Sci/Tech`, `Sports`, or `World`. In the sample articles above, BERT accurately assigns `Sci/Tech` to the first article about a brain study, `World` for the second article about emigration in Venezuela, and `Business` for the third article about the US electric vehicle market. This creates the new variable `predicted_category`–standardized across all publications–that can be used to make high-level distinctions between articles.
+Existing LLMs can be used to enrich the dataset by classifying articles based on their associated textual data. I utilize the fine-tuned BERT model [`bert-base-uncased-ag_news`](https://huggingface.co/fabriceyhc/bert-base-uncased-ag_news), which is trained on the [AG News dataset](https://huggingface.co/datasets/fancyzhx/ag_news). This takes in the concatenated `title` and `description` of an article and predicts one of four categories: `Business`, `Sci/Tech`, `Sports`, or `World`. In the sample articles above, BERT accurately assigns `Sci/Tech` to the first article about a brain study, `World` for the second article about emigration in Venezuela, and `Business` for the third article about the US electric vehicle market. This creates the new `predicted_category` variable–standardized across all publications–that can be used to make high-level distinctions between articles.
   
   
 ### 3. Automated Script for Daily Article Updates
 
 Although I can successfully parse the article data and load it into a DataFrame, the RSS feeds are constantly updating. To ensure that all published articles are captured, the data collection functions need to be run daily. Therefore, I created a Bash script to automate the daily execution of `update_articles.py`, which does the following:  
    1) Loads in article data from the current day's RSS feeds  
-   2) Calculates new features (`days_old` and `predicted_category`)  
+   2) Run inference on `bert-base-uncased-ag_news` to get the `predicted_category` feature  
    3) Updates the ongoing article database by merging in the current day's entries 
 
 Here’s the Bash script used to run `update_articles.py` daily:
@@ -73,14 +73,43 @@ In order to label the data, I created a script that prompts the user (i.e., me) 
 <img src="images/labeling_cli.png" style="display: block; margin: 0 auto;"/>
 
 
-### 5. Pre-Processing
+### 5. Data Exploration
+
+Let's explore the data before jumping right into making recommendations. This will allow me to visualize my preferences and get a preliminary sense of the predictive potential behind the features.
+
+First, I inspect the target variable, `label`, to see the raw article counts and the imbalance between the two classes. There are 856 total articles, with `label = 0` for 618 of them and `label = 1` for the remaining 238. There are several ways to deal with this imbalance, which will be discussed in the modeling section.
+
+<img src="images/label_distribution.png" style="display: block; margin: 0 auto;"/>
+
+Next, I break down the newspaper sources for the articles. These distributions are shown for both the entire article set and for my preferences (i.e., articles with `label = 1`). The graph below suggests that I disproportionately favor *The Wall Street Journal*, which makes up around 25% of all the articles but 40% of those that I would read. *The New York Times*, on the other hand, drops in its prevalence, though still makes up nearly half of my preferences due to its high volume of articles. This makes sense because *WSJ* caters more to my interests in technology and business, whereas *NYT* covers a much wider array of topics.
+
+<img src="images/article_source.png" style="display: block; margin: 0 auto;"/>
+
+My interests are more directly reflected in the distributions of `predicted_category`, which classifies each article into one of four categories based on its title and description. `Business` and `Sci/Tech` are more represented among my preferences, whereas `Sports` and `World` are less represented.
+
+<img src="images/predicted_category.png" style="display: block; margin: 0 auto;"/>
+
+### 6. Pre-Processing
 
 Because there is not a significant amount of data, traditional ML models will be trained on the tabular dataframe to predict the label. However, as the article archive grows from the daily updates, it will get to the point at which training/fine-tuning an RNN- or transformer-based model is the best solution. For now, though, the text data must be processed before being fed into the model. Here I use a common approach of using sklearn's [TfidfVectorizer](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html).
   
-First, the title and description are concatenated into a single text variable. For each article, the TfidfVectorizer then converts the words in the vocabulary into TF-IDF scores. These scores balance the term frequency (TF), which measures how often a word appears in an article, with the inverse document frequency (IDF), which downweights words that are common across all articles. While this approach may not capture complex contextual relationships within the text, it efficiently generates numerical representations that emphasize the most significant words associoated with each article.
+First, the title and description are concatenated into a single text variable. Then, for each article, the TfidfVectorizer converts the words in the vocabulary into TF-IDF scores. These scores balance the term frequency (TF), which measures how often a word appears in an article, with the inverse document frequency (IDF), which downweights words that are common across all articles. While this approach may not capture complex contextual relationships within the text, it efficiently generates numerical representations that emphasize the most significant words associoated with each article.
 
-The other predictors in the dataset–such as `source` and `predicted_category`–are categorical. Therefore, I one-hot encode them so that they can be handled by an ML model
+The other predictors in the dataset–such as `source` and `predicted_category`–are categorical. Therefore, I one-hot encode them so that they can be handled by an ML model.
 
 
-### 6. Recommendation Modeling
+### 7. Recommendation Modeling
+
+Because the data set contains 856 total articles, 238 of which I would read, more advanced ML models will not be able to sufficiently "learn" my preferences. But, as the data set's size increases (it now has 6 days of articles), so too will the complexity and accuracy of the best recommendation model.
+
+For now, a simple L2-regularized logistic regression still performs well, establishing a promising baseline on which to improve. Also, note that the 'class_weight` argument is set to `balanced`, which adjusts the weight of each data point so that it is inversely proportional to the frequency of its class. This ensures against the model becoming biased towards the majority class, or, in this case, `label = 0`. The F1 score–which balances both precision and recall–is also used to account for the class imbalance, resulting in a more robust model.
+
+```python
+logistic = LogisticRegressionCV(Cs=10, penalty='l2', scoring='f1', class_weight='balanced', n_jobs=-1, random_state=0)
+logistic.fit(X_train, y_train)
+```
+
+With the above 2 lines of code, I fit a model that achieves an accuracy of 74.4% and an F1 score of 74.7% on the test set.
+
+I also fit a random forest model, in which I used `GridSearchCV` to find the best `max_depth` and `min_samples_split` hyperparameters. It performed slightly worse than the logistic regression, though, with an accuracy of 73.8% and an F1 score of 73.4%. However, the article archive is automatically adding ~100 articles each day. As mentioned earlier, once the data set reaches a sufficient size, I anticipate models like random forests and gradient boosting–with their advanced feature extraction capabilities–will become the best-performing recommendation models.
 

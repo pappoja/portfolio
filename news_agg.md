@@ -98,11 +98,11 @@ First, the title and description are concatenated into a single text variable. T
 The other predictors in the dataset–such as `source` and `predicted_category`–are categorical. Therefore, I one-hot encode them so that they can be handled by an ML model.
 
 
-### 7. Recommendation Modeling
+### 7. Modeling
 
 Because the data set contains 856 total articles, 238 of which I would read, more advanced ML models will not be able to sufficiently "learn" my preferences. But, as the data set's size increases (it now has 6 days of articles), so too will the complexity and accuracy of the best recommendation model.
 
-For now, a simple L2-regularized logistic regression still performs well, establishing a promising baseline on which to improve. Also, note that the 'class_weight` argument is set to `balanced`, which adjusts the weight of each data point so that it is inversely proportional to the frequency of its class. This ensures against the model becoming biased towards the majority class, or, in this case, `label = 0`. The F1 score–which balances both precision and recall–is also used to account for the class imbalance, resulting in a more robust model.
+For now, a simple L2-regularized logistic regression still performs well, establishing a promising baseline on which to improve. Also, note that the `class_weight` argument is set to `balanced`, which adjusts the weight of each data point so that it is inversely proportional to the frequency of its class. This ensures against the model becoming biased towards the majority class, or, in this case, `label = 0`. The F1 score–which balances both precision and recall–is also used to account for the class imbalance, resulting in a more robust model.
 
 ```python
 logistic = LogisticRegressionCV(Cs=10, penalty='l2', scoring='f1', class_weight='balanced', n_jobs=-1, random_state=0)
@@ -111,5 +111,10 @@ logistic.fit(X_train, y_train)
 
 With the above 2 lines of code, I fit a model that achieves an accuracy of 74.4% and an F1 score of 74.7% on the test set.
 
-I also fit a random forest model, in which I used `GridSearchCV` to find the best `max_depth` and `min_samples_split` hyperparameters. It performed slightly worse than the logistic regression, though, with an accuracy of 73.8% and an F1 score of 73.4%. However, the article archive is automatically adding ~100 articles each day. As mentioned earlier, once the data set reaches a sufficient size, I anticipate models like random forests and gradient boosting–with their advanced feature extraction capabilities–will become the best-performing recommendation models.
+I also fit a random forest model, in which I used `GridSearchCV` to find the best `max_depth` and `min_samples_split` hyperparameters. It performed slightly worse than the logistic regression, though, with an accuracy of 73.8% and an F1 score of 73.4%. However, the article archive is automatically adding ~100 articles each day. As mentioned earlier, once the data set reaches a sufficient size, I anticipate models like random forests and gradient boosting–with their advanced feature extraction capabilities–will become the best-performing recommendation models. Until then, though, the current regression model is more than enough to begin recommending articles to me.
+
+
+### 7. Making Recommendations
+
+
 

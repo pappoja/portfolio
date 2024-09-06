@@ -109,23 +109,28 @@ logistic = LogisticRegressionCV(Cs=10, penalty='l2', scoring='f1', class_weight=
 logistic.fit(X_train, y_train)
 ```
 
-With the above 2 lines of code, I fit a model that achieves an accuracy of 74.4% and an F1 score of 74.7% on the test set.
+With the above 2 lines of code, I fit a model that achieves an accuracy of 74.4%, an F1 score of 54.5%, and a weighted F1 score (for both classes) of 74.7% on the test set.
 
-I also fit a random forest model, in which I used `GridSearchCV` to find the best `max_depth` and `min_samples_split` hyperparameters. It performed slightly worse than the logistic regression, though, with an accuracy of 73.8% and an F1 score of 73.4%. However, the article archive is automatically adding ~100 articles each day. As mentioned earlier, once the data set reaches a sufficient size, I anticipate models like random forests and gradient boosting–with their advanced feature extraction capabilities–will become the best-performing recommendation models. Until then, though, the current regression model is more than enough to begin recommending articles to me.
+I also fit a random forest model, in which I used `GridSearchCV` to find the best `max_depth` and `min_samples_split` hyperparameters. It performed slightly worse than the logistic regression, though, with an accuracy of 73.8%, an F1 score of 49.4%, and a weighted F1 score of 73.4%. However, the article archive is automatically adding ~100 articles each day. As mentioned earlier, once the data set reaches a sufficient size, I anticipate models like random forests and gradient boosting–with their advanced feature extraction capabilities–will become the best-performing recommendation models. Until then, the current regression model is still more than enough to begin recommending articles.
 
 
 ### 7. Making Recommendations
 
-The logistic regression model is now capable of analyzing a large collection of unlabeled (and presumably new) articles to identify those that are most likely to be of interest to me. The model predicts the probability that label = 1 (i.e., articles I would likely want to read), with the confidence score serving as a proxy for how engaging or relevant the article might be. However, simply recommending the top *n* articles based on this confidence score alone is not an ideal solution for two main reasons.
+The logistic regression model is now capable of analyzing a large collection of unlabeled (and presumably new) articles to identify those that are most likely to be of interest to me. The model predicts the probability that `label = 1` (which I store in the `preference_prob` variable), with the confidence score serving as a proxy for how engaging or relevant the article might be. However, simply recommending the top *n* articles based on this confidence score  alone is not an ideal solution for two main reasons.
 
-**Ensuring Topic Diversity in the User Experience**
+**1) Ensuring Topic Diversity in the User Experience**
 - Recommending only the highest-scoring articles can trap users in content echo chambers, reinforcing their existing preferences and limiting exposure to a broader range of topics. This can be avoided by incorporating a balance of high-confidence articles with a curated selection of diverse content. This strategy keeps the user experience fresh and encourages the exploration of topics outside their regular interests.
 
-**Model Improvement Through Feedback**
+**2) Model Improvement Through Feedback**
 - To continually improve the model’s accuracy and relevance, it’s crucial to provide a diverse set of articles, including random selections. Showing only high-confidence articles will limit the variety of feedback the model receives, making it difficult to capture evolving user preferences over time. By presenting a mix of familiar and unexpected content, the tool enables continuous learning about my evolving interests. Over time, this leads to more accurate recommendations, making the reading experience more engaging and personalized, while still providing exposure to new topics.
 
-Therefore, I created a `recommend_articles()` function with the following logic:
-1. Find the Most Relevant Articles: The function first selects the top 10 articles that are predicted to be most relevant to me based on the model's predicted probability that their `label = 1`. 
-2. Ensure Category Diversity: To avoid overloading one category, the function checks that each category (from the four `predicted_category` values) has at least two articles. If any category is underrepresented, it removes a less relevant article from an overrepresented category and replaces it with a more relevant article from the lacking category. This ensures a mix of content across different topics.
-3. Add Random Articles for Variety: To keep things fresh and help the model learn more about my preferences, the function randomly selects five additional articles that weren’t picked in the first round. This helps avoid showing the same type of content repeatedly.
-4. Recommendations: After the articles are carefully selected based on relevance and diversity, the tool presents the final list of 15 articles to me, each accompanied by the relevant information such as the title, description, and a direct link to the full article.
+Therefore, the articles are algorithmically recommended with the following steps:
+1. Find the Most Relevant Articles: The `recommend_articles` function first selects the top 10 articles that are predicted to be most relevant to me based on `preference_prob`–the model's predicted probability that `label = 1`.
+2. Ensure Category Diversity: To avoid overloading one category, the function then checks that each of the four categories (from `predicted_category`) has at least two articles. If any category is underrepresented, it removes a less relevant article from an overrepresented category and replaces it with a more relevant article from the lacking category. This ensures a mix of content across different topics.
+3. Add Random Articles for Variety: To keep things fresh and help the model learn more about my preferences, five additional articles that haven't been picked are randomly selected. This helps avoid repeatedly displaying similar content.
+4. Make Recommendations: After the articles are carefully selected based on relevance and diversity, the tool presents the final list of 15 articles to me, each accompanied by the relevant information such as the title, description, and a direct link to the full article.
+
+The specific criteria and process for selecting articles can be adjusted in a number of ways. For example, articles can be sampled according to their `preference_prob`, other variables like `source` can be considered, the number of articles can be adjusted, and the list goes on. However, I created the above example to demonstrate how the classification model can be leveraged to recommend articles based on a user's media consumption patterns, while also maintaining a degree of stochasticity.
+
+And here are the 15 articles recommended to me by the complete recommendation algorithm!
+<img src="images/article_recs.png" style="display: block; margin: 0 auto;"/>

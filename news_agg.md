@@ -22,9 +22,37 @@ The relevant features provided in the metadata of the RSS feeds are shown below.
 
 <img src="images/sample_df.png" style="display: block; margin: 0 auto;"/>
 
-Firstly, the publication date can be compared against the current day's date to create a more informative `days_old` feature. Because this variable would have to be updated every day, it is only computed before model training time. Secondly, although *NYT* and *FT* provide data on the categories included in each article, such is not the case for *WSJ*, as seen in the third row's empty `categories` entry above. On top of this, the set of categories are not standardized between publications and also tend to be overly specific, thus limiting their generalizablility and predictive potential for a recommendation model.  
+Although *NYT* and *FT* provide data on the categories included in each article, such is not the case for *WSJ*, as seen in the third row's empty `categories` entry above. In addition to this, the set of categories are not standardized between publications and also tend to be overly specific, thus limiting their generalizablility and predictive potential for a recommendation model. 
   
 Existing LLMs can be used to enrich the dataset by classifying articles based on their associated textual data. I utilize the fine-tuned BERT model [`bert-base-uncased-ag_news`](https://huggingface.co/fabriceyhc/bert-base-uncased-ag_news), which is trained on the [AG News dataset](https://huggingface.co/datasets/fancyzhx/ag_news). This takes in the concatenated `title` and `description` of an article and predicts one of four categories: `Business`, `Sci/Tech`, `Sports`, or `World`. In the sample articles above, BERT accurately assigns `Sci/Tech` to the first article about a brain study, `World` for the second article about emigration in Venezuela, and `Business` for the third article about the US electric vehicle market. This creates the new `predicted_category` variable–standardized across all publications–that can be used to make high-level distinctions between articles.
+
+Here is the code that runs inference on the BERT model to extract the new feature from an article's textual data:
+```python
+# Load the tokenizer and model
+tokenizer = AutoTokenizer.from_pretrained("fabriceyhc/bert-base-uncased-ag_news")
+model = AutoModelForSequenceClassification.from_pretrained("fabriceyhc/bert-base-uncased-ag_news")
+
+# Functions to classify the articles using the fine-tuned BERT model
+categories = ["World", "Sports", "Business", "Sci/Tech"]
+def classify_article(text):
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
+    outputs = model(**inputs)
+    probabilities = torch.softmax(outputs.logits, dim=1)
+    predicted_class = torch.argmax(probabilities, dim=1).item()
+    return categories[predicted_class], probabilities[0].tolist()
+
+def classify_row(row):
+    # If the predictions have already been calculated, return them
+    if pd.notna(row.get('predicted_category')) and pd.notna(row.get('predicted_probs')):
+        return pd.Series([row['predicted_category'], row['predicted_probs']])
+    # If not, make the predictions and store them
+    text = f"{row['title']} - {row['description']}"
+    predicted_category, probabilities = classify_article(text)
+    return pd.Series([predicted_category, probabilities])
+
+# Predict all the articles' categories with the BERT model
+df[['predicted_category', 'predicted_probs']] = df.apply(classify_row, axis=1)
+```
   
   
 ### 3. Automated Script for Daily Article Updates

@@ -111,7 +111,7 @@ logistic.fit(X_train, y_train)
 
 With the above 2 lines of code, I fit a model that achieves an accuracy of 74.4% and an F1 score of 54.5% on the test set.
 
-I also fit a random forest model, in which I used `GridSearchCV` to find the best `max_depth` and `min_samples_split` hyperparameters. It performed slightly worse than the logistic regression, though, with an accuracy of 73.8% and an F1 score of 49.4%. This makes sense since the data set is relatively small and their are only 4 predictor variables (`text`, `predicted_category`, `source`, `feed_name`).
+I also fit a random forest model, in which I used `GridSearchCV` to find the best `max_depth` and `min_samples_split` hyperparameters. It performed slightly worse than the logistic regression, though, with an accuracy of 73.8% and an F1 score of 49.4%. This makes sense since the data set is relatively small, and there are only 4 predictor variables (`text`, `predicted_category`, `source`, `feed_name`).
 
 The article archive is automatically adding ~100 articles each day, though. As mentioned earlier, once the data set reaches a sufficient size, I will be able to use more advanced models. For example, I could fine-tune my own BERT model to directly classify an article's `label` variable. However, this would require tons of data. (To put it into perspective, the `bert-base-uncased-ag_news` model was trained on 120,000 rows from the AG News dataset.)
 

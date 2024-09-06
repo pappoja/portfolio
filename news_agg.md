@@ -109,14 +109,17 @@ logistic = LogisticRegressionCV(Cs=10, penalty='l2', scoring='f1', class_weight=
 logistic.fit(X_train, y_train)
 ```
 
-With the above 2 lines of code, I fit a model that achieves an accuracy of 74.4%, an F1 score of 54.5%, and a weighted F1 score (for both classes) of 74.7% on the test set.
+With the above 2 lines of code, I fit a model that achieves an accuracy of 74.4% and an F1 score of 54.5% on the test set. The cross-validation scores are shown below.
 
-I also fit a random forest model, in which I used `GridSearchCV` to find the best `max_depth` and `min_samples_split` hyperparameters. It performed slightly worse than the logistic regression, though, with an accuracy of 73.8%, an F1 score of 49.4%, and a weighted F1 score of 73.4%. However, the article archive is automatically adding ~100 articles each day. As mentioned earlier, once the data set reaches a sufficient size, I anticipate models like random forests and gradient boosting–with their advanced feature extraction capabilities–will become the best-performing recommendation models. Until then, the current regression model is still more than enough to begin recommending articles.
+<img src="images/lrcv_plot.png" style="display: block; margin: 0 auto;"/>
+
+
+I also fit a random forest model, in which I used `GridSearchCV` to find the best `max_depth` and `min_samples_split` hyperparameters. It performed slightly worse than the logistic regression, though, with an accuracy of 73.8% and an F1 score of 49.4%. However, the article archive is automatically adding ~100 articles each day. As mentioned earlier, once the data set reaches a sufficient size, I will be able to use more advanced models; for example, I could fine-tune my own BERT model to directly classiify an article's `label` variable, though this would require tons of data. (To put it into perspective, the `bert-base-uncased-ag_news` model was trained on 120,000 rows from the AG News dataset.)
 
 
 ### 7. Making Recommendations
 
-The logistic regression model is now capable of analyzing a large collection of unlabeled (and presumably new) articles to identify those that are most likely to be of interest to me. The model predicts the probability that `label = 1` (which I store in the `preference_prob` variable), with the confidence score serving as a proxy for how engaging or relevant the article might be. However, simply recommending the top *n* articles based on this confidence score  alone is not an ideal solution for two main reasons.
+The logistic regression model is capable of analyzing a large collection of unlabeled (and presumably new) articles to identify those that are most likely to be of interest to me. The model predicts the probability that `label = 1` (which I store in the `preference_prob` variable), with the confidence score serving as a proxy for how engaging or relevant the article might be. However, simply recommending the top *n* articles based on this confidence score  alone is not an ideal solution for two main reasons.
 
 **1) Ensuring Topic Diversity in the User Experience**
 - Recommending only the highest-scoring articles can trap users in content echo chambers, reinforcing their existing preferences and limiting exposure to a broader range of topics. This can be avoided by incorporating a balance of high-confidence articles with a curated selection of diverse content. This strategy keeps the user experience fresh and encourages the exploration of topics outside their regular interests.
@@ -130,7 +133,7 @@ Therefore, the articles are algorithmically recommended with the following steps
 3. Add Random Articles for Variety: To keep things fresh and help the model learn more about my preferences, five additional articles that haven't been picked are randomly selected. This helps avoid repeatedly displaying similar content.
 4. Make Recommendations: After the articles are carefully selected based on relevance and diversity, the tool presents the final list of 15 articles to me, each accompanied by the relevant information such as the title, description, and a direct link to the full article.
 
-The specific criteria and process for selecting articles can be adjusted in a number of ways. For example, articles can be sampled according to their `preference_prob`, other variables like `source` can be considered, the number of articles can be adjusted, and the list goes on. However, I created the above example to demonstrate how the classification model can be leveraged to recommend articles based on a user's media consumption patterns, while also maintaining a degree of stochasticity.
+The specific criteria and process for selecting articles can be adjusted in a number of ways. For example, articles can be sampled according to their `preference_prob`, other variables like `source` can be considered, the number of articles can be adjusted, and the list goes on. And the biggest improvement will come from a larger dataset, which opens the door for more complex models. Still, I created the above example to demonstrate how the recommender can leverage an ML classification model that learns from a user's media consumption patterns, while also maintaining a degree of stochasticity.
 
 And here are the 15 articles recommended to me by the complete recommendation algorithm!
 <img src="images/article_recs.png" style="display: block; margin: 0 auto;"/>

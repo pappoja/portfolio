@@ -77,11 +77,11 @@ In order to label the data, I created a script that prompts the user (i.e., me) 
 
 Let's explore the data before jumping right into making recommendations. This will allow me to visualize my preferences and get a preliminary sense of the predictive potential behind the features.
 
-First, I inspect the target variable, `label`, to see the raw article counts and the imbalance between the two classes. There are 856 total articles, with `label = 0` for 618 of them and `label = 1` for the remaining 238. There are several ways to deal with this imbalance, which will be discussed in the modeling section.
+First, I inspect the target variable, `label`, to see the raw article counts and the imbalance between the two classes. There are 856 total articles, with `label=0` for 618 of them and `label=1` for the remaining 238. There are several ways to deal with this imbalance, which will be discussed in the modeling section.
 
 <img src="images/label_distribution.png" style="display: block; margin: 0 auto;"/>
 
-Next, I break down the newspaper sources for the articles. These distributions are shown for both the entire article set and for my preferences (i.e., articles with `label = 1`). The graph below suggests that I disproportionately favor *The Wall Street Journal*, which makes up around 25% of all the articles but 40% of those that I would read. *The New York Times*, on the other hand, drops in its prevalence, though still makes up nearly half of my preferences due to its high volume of articles. This makes sense because *WSJ* caters more to my interests in technology and business, whereas *NYT* covers a much wider array of topics.
+Next, I break down the newspaper sources for the articles. These distributions are shown for both the entire article set and for my preferences (i.e., articles with `label=1`). The graph below suggests that I disproportionately favor *The Wall Street Journal*, which makes up around 25% of all the articles but 40% of those that I would read. *The New York Times*, on the other hand, drops in its prevalence, though still makes up nearly half of my preferences due to its high volume of articles. This makes sense because *WSJ* caters more to my interests in technology and business, whereas *NYT* covers a much wider array of topics.
 
 <img src="images/article_source.png" style="display: block; margin: 0 auto;"/>
 
@@ -100,9 +100,9 @@ The other predictors in the dataset–`source`, `feed_name`, and `predicted_cate
 
 ### 7. Modeling
 
-Because the data set contains 856 total articles, 238 of which I would read (i.e., `label = 1`), more advanced ML models will not be able to sufficiently "learn" my preferences. But, as the data set's size increases (here, it has 6 days of articles), so too will the complexity and accuracy of the best recommendation model.
+Because the data set contains 856 total articles, 238 of which I would read (i.e., `label=1`), more advanced ML models will not be able to sufficiently "learn" my preferences. But, as the data set's size increases (here, it has 6 days of articles), so too will the complexity and accuracy of the best recommendation model.
 
-For now, a simple L2-regularized logistic regression still performs well, establishing a promising baseline on which to improve. Also, note that the `class_weight` argument is set to `balanced`, which adjusts the weight of each data point so that it is inversely proportional to the frequency of its class. This ensures against the model becoming biased towards the majority class, or, in this case, `label = 0`. The F1 score–which balances both precision and recall–is also used to account for the class imbalance, resulting in a more robust model.
+For now, a simple L2-regularized logistic regression still performs well, establishing a promising baseline on which to improve. Also, note that the `class_weight` argument is set to `balanced`, which adjusts the weight of each data point so that it is inversely proportional to the frequency of its class. This ensures against the model becoming biased towards the majority class, or, in this case, `label=0`. The F1 score–which balances both precision and recall–is also used to account for the class imbalance, resulting in a more robust model.
 
 ```python
 logistic = LogisticRegressionCV(Cs=10, penalty='l2', scoring='f1', class_weight='balanced', n_jobs=-1, random_state=0)
@@ -118,7 +118,7 @@ The article archive is automatically adding ~100 articles each day, though. As m
 
 ### 7. Making Recommendations
 
-The logistic regression model is still capable of analyzing a large collection of unlabeled (and presumably new) articles to identify those that are most likely to be of interest to me. The model predicts the probability that `label = 1` (which I store in the `preference_prob` variable), and these can serve as a proxy for how engaging or relevant the article is to me. However, simply recommending the top *n* articles based on this confidence score alone is not an ideal solution for two main reasons.
+The logistic regression model is still capable of analyzing a large collection of unlabeled (and presumably new) articles to identify those that are most likely to be of interest to me. The model predicts the probability that `label=1` (which I store in the `preference_prob` variable), and these can serve as a proxy for how engaging or relevant the article is to me. However, simply recommending the top *n* articles based on this confidence score alone is not an ideal solution for two main reasons.
 
 **1) Ensuring Topic Diversity in the User Experience**
 - Recommending only the highest-scoring articles can trap users in content echo chambers, reinforcing their existing preferences and limiting exposure to a broader range of topics. This can be avoided by incorporating a balance of high-confidence articles with a curated selection of diverse content. This strategy keeps the user experience fresh and encourages the exploration of topics outside their regular interests.
@@ -127,7 +127,7 @@ The logistic regression model is still capable of analyzing a large collection o
 - To continually improve the model’s accuracy and relevance, it’s crucial to provide a diverse set of articles, including random selections. Showing only high-confidence articles will limit the variety of feedback the model receives, making it difficult to capture evolving user preferences over time. By presenting a mix of familiar and unexpected content, the tool enables continuous learning about my evolving interests. Over time, this leads to more accurate recommendations, making the reading experience more engaging and personalized, while still providing exposure to new topics.
 
 Therefore, the articles are algorithmically recommended with the following steps:
-1. Find the Most Relevant Articles: The `recommend_articles` function first selects the top 10 articles that are predicted to be most relevant to me based on `preference_prob`–the model's predicted probability that `label = 1`.
+1. Find the Most Relevant Articles: The `recommend_articles` function first selects the top 10 articles that are predicted to be most relevant to me based on `preference_prob`–the model's predicted probability that `label=1`.
 2. Ensure Category Diversity: To avoid overloading one category, the function then checks that each of the four categories (from `predicted_category`) has at least two articles. If any category is underrepresented, it removes a less relevant article from an overrepresented category and replaces it with a more relevant article from the lacking category. This ensures a mix of content across different topics.
 3. Add Random Articles for Variety: To keep things fresh and help the model learn more about my preferences, five additional articles that haven't been picked are randomly selected. This helps avoid repeatedly displaying similar content.
 4. Make Recommendations: After the articles are carefully selected based on relevance and diversity, the tool presents the final list of 15 articles to me, each accompanied by the relevant information such as the title, description, and a direct link to the full article.

@@ -95,12 +95,12 @@ Because there is not a significant amount of data, traditional ML models will be
   
 First, the title and description are concatenated into a single text variable. Then, for each article, the TfidfVectorizer converts the words in the vocabulary into TF-IDF scores. These scores balance the term frequency (TF), which measures how often a word appears in an article, with the inverse document frequency (IDF), which downweights words that are common across all articles. While this approach may not capture complex contextual relationships within the text, it efficiently generates numerical representations that emphasize the most significant words associoated with each article.
 
-The other predictors in the dataset–such as `source` and `predicted_category`–are categorical. Therefore, I one-hot encode them so that they can be handled by an ML model.
+The other predictors in the dataset–`source`, `feed_name`, and `predicted_category`–are all categorical. Therefore, I one-hot encode them so that they can be handled by an ML model.
 
 
 ### 7. Modeling
 
-Because the data set contains 856 total articles, 238 of which I would read, more advanced ML models will not be able to sufficiently "learn" my preferences. But, as the data set's size increases (it now has 6 days of articles), so too will the complexity and accuracy of the best recommendation model.
+Because the data set contains 856 total articles, 238 of which I would read (i.e., `label = 1`), more advanced ML models will not be able to sufficiently "learn" my preferences. But, as the data set's size increases (here, it has 6 days of articles), so too will the complexity and accuracy of the best recommendation model.
 
 For now, a simple L2-regularized logistic regression still performs well, establishing a promising baseline on which to improve. Also, note that the `class_weight` argument is set to `balanced`, which adjusts the weight of each data point so that it is inversely proportional to the frequency of its class. This ensures against the model becoming biased towards the majority class, or, in this case, `label = 0`. The F1 score–which balances both precision and recall–is also used to account for the class imbalance, resulting in a more robust model.
 
@@ -109,17 +109,16 @@ logistic = LogisticRegressionCV(Cs=10, penalty='l2', scoring='f1', class_weight=
 logistic.fit(X_train, y_train)
 ```
 
-With the above 2 lines of code, I fit a model that achieves an accuracy of 74.4% and an F1 score of 54.5% on the test set. The cross-validation scores are shown below.
+With the above 2 lines of code, I fit a model that achieves an accuracy of 74.4% and an F1 score of 54.5% on the test set.
 
-<img src="images/lrcv_plot.png" style="display: block; margin: 0 auto;"/>
+I also fit a random forest model, in which I used `GridSearchCV` to find the best `max_depth` and `min_samples_split` hyperparameters. It performed slightly worse than the logistic regression, though, with an accuracy of 73.8% and an F1 score of 49.4%. This makes sense since the data set is relatively small and their are only 4 predictor variables (`text`, `predicted_category`, `source`, `feed_name`).
 
-
-I also fit a random forest model, in which I used `GridSearchCV` to find the best `max_depth` and `min_samples_split` hyperparameters. It performed slightly worse than the logistic regression, though, with an accuracy of 73.8% and an F1 score of 49.4%. However, the article archive is automatically adding ~100 articles each day. As mentioned earlier, once the data set reaches a sufficient size, I will be able to use more advanced models; for example, I could fine-tune my own BERT model to directly classiify an article's `label` variable, though this would require tons of data. (To put it into perspective, the `bert-base-uncased-ag_news` model was trained on 120,000 rows from the AG News dataset.)
+The article archive is automatically adding ~100 articles each day, though. As mentioned earlier, once the data set reaches a sufficient size, I will be able to use more advanced models. For example, I could fine-tune my own BERT model to directly classify an article's `label` variable. However, this would require tons of data. (To put it into perspective, the `bert-base-uncased-ag_news` model was trained on 120,000 rows from the AG News dataset.)
 
 
 ### 7. Making Recommendations
 
-The logistic regression model is capable of analyzing a large collection of unlabeled (and presumably new) articles to identify those that are most likely to be of interest to me. The model predicts the probability that `label = 1` (which I store in the `preference_prob` variable), with the confidence score serving as a proxy for how engaging or relevant the article might be. However, simply recommending the top *n* articles based on this confidence score  alone is not an ideal solution for two main reasons.
+The logistic regression model is capable of analyzing a large collection of unlabeled (and presumably new) articles to identify those that are most likely to be of interest to me. The model predicts the probability that `label = 1` (which I store in the `preference_prob` variable), and these can serve as a proxy for how engaging or relevant the article is to me. However, simply recommending the top *n* articles based on this confidence score alone is not an ideal solution for two main reasons.
 
 **1) Ensuring Topic Diversity in the User Experience**
 - Recommending only the highest-scoring articles can trap users in content echo chambers, reinforcing their existing preferences and limiting exposure to a broader range of topics. This can be avoided by incorporating a balance of high-confidence articles with a curated selection of diverse content. This strategy keeps the user experience fresh and encourages the exploration of topics outside their regular interests.

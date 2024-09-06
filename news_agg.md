@@ -118,7 +118,7 @@ The article archive is automatically adding ~100 articles each day, though. As m
 
 ### 7. Making Recommendations
 
-The logistic regression model is still capable of analyzing a large collection of unlabeled (and presumably new) articles to identify those that are most likely to be of interest to me. The model predicts the probability that `label=1` (which I store in the `preference_prob` variable), and these can serve as a proxy for how engaging or relevant the article is to me. However, simply recommending the top *n* articles based on this confidence score alone is not an ideal solution for two main reasons.
+The logistic regression model is still capable of analyzing a large collection of unlabeled (and presumably new) articles to identify those that are most likely to be of interest to me. The model predicts the probability that `label=1`, which I store in the `preference_prob` variable. These can serve as a proxy for how engaging or relevant the article is to me on a scale from 0 to 1, and since articles with the highest confidence predictions will be selected, the accuracy of the model is effectively increased. However, simply recommending the top *n* articles based on `preference_prob` alone is not an ideal solution for two main reasons.
 
 **1) Ensuring Topic Diversity in the User Experience**
 - Recommending only the highest-scoring articles can trap users in content echo chambers, reinforcing their existing preferences and limiting exposure to a broader range of topics. This can be avoided by incorporating a balance of high-confidence articles with a curated selection of diverse content. This strategy keeps the user experience fresh and encourages the exploration of topics outside their regular interests.

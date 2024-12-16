@@ -5,7 +5,7 @@
 
 ### [gAIn: Your Personal Health and Fitness Coach](/gain)
 <a href="/gain">
-  <img src="images/gain_thumbnail.png" class="project-image">
+  <img src="images/gain_thumbnail.png" style="display: block; margin: 0 auto; width: 60%; height: auto;" />
 </a>
 
 ### [Audio Sentiment Analysis](/audio_sentiment)

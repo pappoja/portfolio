@@ -3,6 +3,11 @@
 
 ## Class Projects
 
+### [gAIn: Your Personal Health and Fitness Coach](/gain)
+<a href="/gain">
+  <img src="images/gain_thumbnail.png" class="project-image">
+</a>
+
 ### [Audio Sentiment Analysis](/audio_sentiment)
 <a href="/audio_sentiment">
   <img src="images/audio_project_image.png" class="project-image">

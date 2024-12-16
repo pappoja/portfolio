@@ -3,6 +3,7 @@
 
 <img src="images/gain_thumbnail.png" style="display: block; margin: 0 auto; width: 50%; height: auto;" />
 
+  
 ### The Problem: No Simple, Personalized Health Platform
 
 In today’s world, health and fitness information is abundant — but often overwhelming. The average person struggles to keep up with evolving research, fitness trends, and their own personal goals. Whether you’re looking to lose weight, gain muscle, or simply live a healthier life, navigating the sea of generalized advice is daunting.
@@ -14,7 +15,8 @@ For goal-oriented individuals, fitness enthusiasts, and anyone looking to stay h
   2. **Lack of Accessibility**: Personalized advice typically requires expensive and time-consuming personal trainers.
   3. **Information Overload**: Constantly evolving research and automated personal data collection (via wearable devices) leave users with fragmented insights and no clear path forward.
 
-The result? No single, trusted, user-friendly platform offers tailored advice, up-to-date insights, and expert-level guidance in one place.
+The result? No single, trusted, user-friendly platform offers tailored advice, up-to-date insights, and expert-level guidance in one place.  
+
 
 ### Enter gAIn: Your Personalized Health and Fitness AI Assistant
 
@@ -27,9 +29,9 @@ Here’s what makes gAIn unique:
 
 <img src="images/gain_home.png" style="display: block; margin: 0 auto;"/>
 
-<img src="images/gain_convo.png" style="display: block; margin: 0 auto;"/>
-  
-  
+<img src="images/gain_convo.png" style="display: block; margin: 0 auto;"/>  
+
+
 ### Behind the Scenes: The Technology Powering gAIn
 
 <img src="images/technical-arch.png" style="display: block; margin: 0 auto;"/>
@@ -53,16 +55,16 @@ Building a personalized AI health coach requires an elegant blend of modern mach
    - The web application is containerized with **Docker** and deployed on a **Kubernetes** cluster via **Google Cloud**.
    - **Ansible** automates infrastructure setup and deployment, ensuring a robust and scalable deployment pipeline.
 
-<img src="images/gain_tech_sols.png" style="display: block; margin: 0 auto;"/>
-  
-  
+<img src="images/gain_tech_sols.png" style="display: block; margin: 0 auto;"/>  
+
+
 ### Why gAIn Matters
 
 gAIn revolutionizes the way people approach health and fitness by combining cutting-edge research, wearable data, and personalized coaching into an affordable, accessible AI assistant. With gAIn, users no longer need to sift through mountains of health data or piecemeal advice from various sources. Instead, they can simply engage in a conversation, whether it’s about their progress, next steps, or long-term goals.
 
-This constant and comprehensive awareness allows users to take a proactive approach to their wellness journey, armed with insights tailored specifically to their activity, lifestyle, and objectives. Unlike traditional personal trainers, gAIn has complete recall of a user’s history and goals, expert knowledge from across the internet, and 24/7 availability — all at only a fraction of the cost.
+This constant and comprehensive awareness allows users to take a proactive approach to their wellness journey, armed with insights tailored specifically to their activity, lifestyle, and objectives. Unlike traditional personal trainers, gAIn has complete recall of a user’s history and goals, expert knowledge from across the internet, and 24/7 availability — all at only a fraction of the cost.  
 
-  
+
 ### What’s Next for gAIn?
 
 As we continue to innovate, gAIn’s future includes:

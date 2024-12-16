@@ -1,7 +1,7 @@
 ## gAIn: Your Personal Health and Fitness Coach
 ##### (see our GitHub repo [here](https://github.com/madsgroholdt/AC215_gAIn) and our Medium post [here](https://medium.com/@jakepappo/gain-the-future-of-health-and-fitness-192836683427))
 
-<img src="images/gain_thumbnail.png" style="display: block; margin: 0 auto;"/>
+<img src="images/gain_thumbnail.png" style="display: block; margin: 0 auto; width: 50%; height: auto;" />
 
 ### The Problem: No Simple, Personalized Health Platform
 

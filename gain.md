@@ -34,7 +34,7 @@ Here’s what makes gAIn unique:
 
 ### Behind the Scenes: The Technology Powering gAIn
 
-<img src="images/technical-arch.png" style="display: block; margin: 0 auto;"/>
+<img src="images/technical_arch.png" style="display: block; margin: 0 auto;"/>
 
 Building a personalized AI health coach requires an elegant blend of modern machine learning, data engineering, and user-centric design. Here’s how we’ve brought gAIn to life:
 1. **Data Pipeline**
